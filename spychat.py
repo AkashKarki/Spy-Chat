@@ -74,9 +74,9 @@ def Select_friend(spy_name):
 
 def Send_message(spy_name,friend_pos):
     path=raw_input("enter image name")
-    output_path = "C:\Users\Akash\Downloads\output.jpg"
+    out_name=raw_input("enter output image name")
     message=raw_input("enter the message::")
-    Steganography.encode(path, output_path, message)
+    Steganography.encode(path, out_name, message)
     print "message encription done"
     if spy_name not in spy_history.keys():
         friend_name=spy_list[spy_name]["friend"].keys()
@@ -91,6 +91,9 @@ def Send_message(spy_name,friend_pos):
             spy_history[spy_name].update({friend_name: {"message": [], "time": []}})
         spy_history[spy_name][friend_name].update=["message"].append(message)
         spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S'))
+
+
+
 while True:
     print"Welcome Spy"
     spy_name=raw_input("enter the your name::")
@@ -130,3 +133,4 @@ while True:
         if spy_choice=="3":
             friend_pos=Select_friend(spy_name)
             Send_message(spy_name,friend_pos)
+        if spy_choice=="4":

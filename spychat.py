@@ -1,4 +1,6 @@
+from steganography.steganography import Steganography
 spy_list={}
+spy_history={}
 def Add_Status(spy_name):
     pre_status_list=["available","busy","sleeping","at work"]
     if len(spy_list[spy_name]["status"])==0:
@@ -70,7 +72,15 @@ def Select_friend(spy_name):
 
 
 def Send_message(spy_name,friend_pos):
-    print""
+    path="C:\Users\Akash\Downloads\input.jpg"
+    output_path = "C:\Users\Akash\Downloads\output.jpg"
+    message=raw_input("enter the message")
+    Steganography.encode(path, output_path, message)
+    print "message encription done"
+    if spy_name not in spy_history.keys():
+        name=spy_list[spy_name]["friend"]
+        name=name[friend_pos]
+        spy_history.update({spy_name:{name:{"message":[],"time":[]}}})
 
 
 while True:

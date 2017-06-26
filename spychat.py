@@ -93,7 +93,30 @@ def Send_message(spy_name,friend_pos):
         spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S'))
 
 
+def read_a_message(spy_name):
+    pos=Select_friend(spy_name)
+    while True:
+        image_name=raw_input("enter name of image you want to decode")
+        try:
+            secret_text = Steganography.decode(image_name)
+            print "test="+secret_text
+            break
+        except Exception as e:
+            print "this image does not contain any text"
+            continue
 
+def read_chat(spy_name):
+        friend_pos= Select_friend(spy_name)
+        friend_name = spy_list[spy_name]["friend"].keys()
+        friend_name = friend_name[friend_pos]
+        name_list=spy_history[spy_name].keys()
+        if friend_name in name_list:
+            message_list = spy_history[spy_name][friend_name]["message"]
+            for message in message_list:
+                print"=>"+message
+        else:
+            print friend_name+"had not sent any message"
+        
 while True:
     print"Welcome Spy"
     spy_name=raw_input("enter the your name::")
@@ -134,3 +157,7 @@ while True:
             friend_pos=Select_friend(spy_name)
             Send_message(spy_name,friend_pos)
         if spy_choice=="4":
+            read_a_message(spy_name)
+
+        if spy_choice=="5":
+            read_chat(spy_name)

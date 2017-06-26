@@ -1,4 +1,5 @@
 from steganography.steganography import Steganography
+from datetime import datetime
 spy_list={}
 spy_history={}
 def Add_Status(spy_name):
@@ -72,17 +73,23 @@ def Select_friend(spy_name):
 
 
 def Send_message(spy_name,friend_pos):
-    path="C:\Users\Akash\Downloads\input.jpg"
+    path=raw_input("enter image name")
     output_path = "C:\Users\Akash\Downloads\output.jpg"
-    message=raw_input("enter the message")
+    message=raw_input("enter the message::")
     Steganography.encode(path, output_path, message)
     print "message encription done"
     if spy_name not in spy_history.keys():
-        name=spy_list[spy_name]["friend"]
-        name=name[friend_pos]
-        spy_history.update({spy_name:{name:{"message":[],"time":[]}}})
-
-
+        friend_name=spy_list[spy_name]["friend"].keys()
+        friend_name=friend_name[friend_pos]
+        spy_history.update({spy_name:{friend_name:{"message":[],"time":[]}}})
+        spy_history[spy_name][friend_name]["message"].append(message)
+        spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S'))
+    else:
+        friend_name = spy_list[spy_name]["friend"].keys()
+        friend_name = friend_name[friend_pos]
+        spy_history.update({spy_name: {friend_name: {"message": [], "time": []}}})
+        spy_history[spy_name][friend_name].update=["message"].append(message)
+        spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S'))
 while True:
     print"Welcome Spy"
     spy_name=raw_input("enter the your name::")
@@ -91,10 +98,10 @@ while True:
             spy_salutation=raw_input("press 1 to adress you Mr\npress 2 to adress you Ms\nwating for your response::")
             while True:
                 if spy_salutation=="1":
-                    spy_name="Mr."+spy_name
+                    spy_salutation="Mr"
                     break
                 elif spy_salutation=="2":
-                    spy_name = "Ms."+spy_name
+                    spy_salutation = "Ms"
                     break
                 else:
                     print "invalid option try again"
@@ -102,7 +109,7 @@ while True:
             spy_authenticate=int(raw_input("enter your age::"))
             if spy_authenticate>=12 and spy_authenticate<=50:
                 spy_rating=raw_input("enter your rating::")
-                spy_list.update({spy_name:{"status":[],"present status":"","rating":spy_rating,"age":spy_authenticate,"friend":{}}})
+                spy_list.update({spy_name:{"status":[],"present status":"","salutation":spy_salutation,"rating":spy_rating,"age":spy_authenticate,"friend":{}}})
                 print"you are added to spy list"
                 continue
             else:
@@ -122,3 +129,4 @@ while True:
         if spy_choice=="3":
             friend_pos=Select_friend(spy_name)
             Send_message(spy_name,friend_pos)
+            

@@ -87,7 +87,8 @@ def Send_message(spy_name,friend_pos):
     else:
         friend_name = spy_list[spy_name]["friend"].keys()
         friend_name = friend_name[friend_pos]
-        spy_history.update({spy_name: {friend_name: {"message": [], "time": []}}})
+        if friend_name not in spy_history[spy_name].keys():
+            spy_history[spy_name].update({friend_name: {"message": [], "time": []}})
         spy_history[spy_name][friend_name].update=["message"].append(message)
         spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S'))
 while True:
@@ -129,4 +130,3 @@ while True:
         if spy_choice=="3":
             friend_pos=Select_friend(spy_name)
             Send_message(spy_name,friend_pos)
-            

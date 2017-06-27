@@ -135,6 +135,11 @@ def read_chat(spy_name):
 
 while True:
     print"Welcome Spy"
+    user_choice=raw_input("press 1 if you want to use default user\npress 2 if you want to create your own user\nwating for your response::")
+    if user_choice=="1":
+        from default_user import spy_list1,spy_history1
+        spy_list=spy_list1
+        spy_history=spy_history1
     spy_name=raw_input("enter the your name::")
     if spy_name not in spy_list.keys():
         if len(spy_name)!=0:

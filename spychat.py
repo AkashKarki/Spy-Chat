@@ -116,7 +116,7 @@ def read_chat(spy_name):
                 print"=>"+message
         else:
             print friend_name+"had not sent any message"
-        
+
 while True:
     print"Welcome Spy"
     spy_name=raw_input("enter the your name::")
@@ -146,18 +146,26 @@ while True:
             print "invalid name"
             continue
     else:
-        spy_choice=raw_input("1.add status\n2.add a friend\n3.send an encoded message\n4.read message\n5.read previous history\nwating for resonpse::")
-        if spy_choice=="1":
-            Add_Status(spy_name)
+        while True:
+            spy_choice=raw_input("1.add status\n2.add a friend\n3.send an encoded message\n4.read message\n5.read previous history\n6.exit\nwating for resonpse::")
+            if spy_choice=="1":
+                Add_Status(spy_name)
 
-        if spy_choice=="2":
-            Add_friend(spy_name)
+            elif spy_choice=="2":
+                Add_friend(spy_name)
 
-        if spy_choice=="3":
-            friend_pos=Select_friend(spy_name)
-            Send_message(spy_name,friend_pos)
-        if spy_choice=="4":
-            read_a_message(spy_name)
+            elif spy_choice=="3":
+                friend_pos=Select_friend(spy_name)
+                Send_message(spy_name,friend_pos)
+            elif spy_choice=="4":
+                read_a_message(spy_name)
 
-        if spy_choice=="5":
-            read_chat(spy_name)
+            elif spy_choice=="5":
+                read_chat(spy_name)
+
+            elif spy_choice=="6":
+                print("bye! have a nice day")
+                exit()
+            else:
+                print "wrong input try again"
+                continue

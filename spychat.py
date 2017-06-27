@@ -1,5 +1,6 @@
 from steganography.steganography import Steganography
 from datetime import datetime
+import itertools
 spy_list={}
 spy_history={}
 def Add_Status(spy_name):
@@ -23,13 +24,13 @@ def Add_Status(spy_name):
                 new_status=pre_status_list[res-1]
                 spy_list[spy_name]["present status"] =new_status
                 spy_list[spy_name]["status"].append(new_status)
-                print"status set"
+                print"status set::"+new_status
                 return
         elif status_choice=="2":
             new_status=raw_input("enter your new status")
             spy_list[spy_name]["status"].append(new_status)
             spy_list[spy_name]["present status"] = new_status
-            print"status set"
+            print"status set::" + new_status
             break
         elif status_choice=="3":
             print"\nyour previous status are::"
@@ -45,7 +46,7 @@ def Add_Status(spy_name):
                 sta=spy_list[spy_name]["status"]
                 new_status = sta[res - 1]
                 spy_list[spy_name]["present status"] = new_status
-                print"status set"
+                print"status set::"+new_status
                 break
         else:
             print"wrong choice"
@@ -74,6 +75,9 @@ def Select_friend(spy_name):
         print "please select a friend::"
         i=1
         friend_list=spy_list[spy_name]["friend"].keys()
+        if len(friend_list)==0:
+            print"\nyou dont have any friend"
+            return 9999
         for friend_name in friend_list:
             print str(i)+"."+friend_name
             i=i+1
@@ -91,18 +95,18 @@ def Send_message(spy_name,friend_pos):
     out_name=raw_input("enter output image name::")
     message=raw_input("enter the message::")
     try:
-        print"\nplease wait encodeing the image"
+        print"\nplease wait encodeing the image....."
         Steganography.encode(path, out_name, message)
         print "\nmessage encription done"
         if spy_name not in spy_history.keys():
             friend_name=friend_pos
-            spy_history.update({spy_name:{friend_name:{"message":[],"time":[]}}})
+            spy_history.update({spy_name:{friend_name:{"message":[],"time":[],"sender_reciver":False}}})
             spy_history[spy_name][friend_name]["message"].append(message)
             spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S'))
         else:
             friend_name = friend_pos
             if friend_name not in spy_history[spy_name].keys():
-                spy_history[spy_name].update({friend_name: {"message": [], "time": []}})
+                spy_history[spy_name].update({friend_name: {"message": [], "time": [],"sender_reciver":False}})
             spy_history[spy_name][friend_name]["message"].append(message)
             spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S'))
     except Exception as e:
@@ -111,36 +115,46 @@ def Send_message(spy_name,friend_pos):
 
 def read_a_message(spy_name):
     pos=Select_friend(spy_name)
+    if pos == 9999:
+        return
     while True:
         image_name=raw_input("enter name of image you want to decode")
         try:
-            print"\nplease wait decodeing the image"
+            print"\nplease wait decodeing the image........"
             secret_text = Steganography.decode(image_name)
+            spy_history[spy_name][pos]["sender_reciver"]=True
             print "secret message is::"+secret_text
+            if secret_text=="SOS":
+                print"it an argent message"
+            if secret_text=="save me":
+                print"it an argent message"
             break
         except Exception as e:
-            print "\nthis image does not contain any text"
+            print "\nthis image does not contain any message"
             continue
 
 def read_chat(spy_name):
         friend_name= Select_friend(spy_name)
+        if friend_name == 9999:
+            return
         name_list=spy_history[spy_name].keys()
         if friend_name in name_list:
             message_list = spy_history[spy_name][friend_name]["message"]
+            time_list=spy_history[spy_name][friend_name]["time"]
             print"list of message send by "+friend_name
-            for message in message_list:
-                print"=>"+message
+            for message,time in itertools.izip(message_list,time_list):
+                print"=>message is"+message+" at time "+time
         else:
             print friend_name+" had not sent any message."
 
 while True:
-    print"Welcome Spy"
-    user_choice=raw_input("press 1 if you want to use default user\npress 2 if you want to create your own user\nwating for your response::")
+    print"\nWelcome Spy"
+    user_choice=raw_input("\npress 1 if you want to use default user\npress 2 if you want to create your own custom user\nwating for your response::")
     if user_choice=="1":
         from default_user import spy_list1,spy_history1
         spy_list=spy_list1
         spy_history=spy_history1
-    spy_name=raw_input("enter the your name::")
+    spy_name=raw_input("\nenter the your name::")
     if spy_name not in spy_list.keys():
         if len(spy_name)!=0:
             spy_salutation=raw_input("\npress 1 to adress you Mr\npress 2 to adress you Ms\nwating for your response::")
@@ -152,11 +166,11 @@ while True:
                     spy_salutation = "Ms"
                     break
                 else:
-                    print "invalid option try again"
+                    print "\ninvalid option try again"
                     continue
-            spy_authenticate=int(raw_input("enter your age::"))
+            spy_authenticate=int(raw_input("\nenter your age::"))
             if spy_authenticate>=12 and spy_authenticate<=50:
-                spy_rating=raw_input("enter your rating::")
+                spy_rating=float(raw_input("enter your rating::"))
                 spy_list.update({spy_name:{"status":[],"present status":"","salutation":spy_salutation,"rating":spy_rating,"age":spy_authenticate,"friend":{}}})
                 print"\nyou are added to spy list"
                 continue
@@ -167,8 +181,10 @@ while True:
             print "\ninvalid name"
             continue
     else:
+        print"\nwelcome " + spy_list[spy_name]["salutation"] + "." + spy_name
+        print"your age::"+str(spy_list[spy_name]["age"])
+        print"your rating::" + str(spy_list[spy_name]["rating"])
         while True:
-            print"welcome "+spy_list[spy_name]["salutation"]+"."+spy_name
             spy_choice=raw_input("\n1.add status\n2.add a friend\n3.send an encoded message\n4.read message\n5.read previous history\n6.exit\nwating for resonpse::")
             if spy_choice=="1":
                 Add_Status(spy_name)
@@ -178,6 +194,8 @@ while True:
 
             elif spy_choice=="3":
                 friend_pos=Select_friend(spy_name)
+                if friend_pos==9999:
+                    continue
                 Send_message(spy_name,friend_pos)
             elif spy_choice=="4":
                 read_a_message(spy_name)
@@ -189,5 +207,5 @@ while True:
                 print("bye! have a nice day")
                 break
             else:
-                print "wrong input try again"
+                print "\nwrong input try again"
                 continue

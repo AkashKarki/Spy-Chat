@@ -22,15 +22,18 @@ def Add_Status(spy_name):
                     continue
                 new_status=pre_status_list[res-1]
                 spy_list[spy_name]["present status"] =new_status
+                spy_list[spy_name]["status"].append(new_status)
                 print"status set"
+                return
         elif status_choice=="2":
             new_status=raw_input("enter your new status")
             spy_list[spy_name]["status"].append(new_status)
             spy_list[spy_name]["present status"] = new_status
             print"status set"
+            break
         elif status_choice=="3":
             print"your previous status are::"
-            i=0
+            i=1
             for status in spy_list[spy_name]["status"]:
                 print str(i)+"."+status
                 i=i+1
@@ -39,6 +42,7 @@ def Add_Status(spy_name):
             new_status = sta[res - 1]
             spy_list[spy_name]["present status"] = new_status
             print"status set"
+            break
         else:
             print"wrong choice"
             continue
@@ -46,14 +50,18 @@ def Add_Status(spy_name):
 def Add_friend(spy_name):
     while True:
         friend_name = raw_input("enter friend's name::")
-        friend_age = raw_input("enter friend's age::")
+        friend_age = int(raw_input("enter friend's age::"))
         friend_rating = raw_input("enter friend's rating::")
-        if (friend_age >= 12 and friend_age <= 50) and len(friend_name) != 0 and (int(spy_list[spy_name]["rating"] <= int(friend_rating))):
-            spy_list[spy_name]["friend"].update({friend_name: {"age": friend_age, "rating": friend_rating}})
-            print "friend added"
-            break
+        if (friend_age >= 12 and friend_age <= 50) and (len(friend_name) != 0):
+            if (float(spy_list[spy_name]["rating"]) <= float(friend_rating)):
+                spy_list[spy_name]["friend"].update({friend_name: {"age": friend_age, "rating": friend_rating}})
+                print "friend added"
+                break
+            else:
+                print "information is not valid.Try again 1"
+                continue
         else:
-            print "information is not valid.Try again"
+            print "information is not valid.Try again 2"
             continue
 
 
@@ -77,6 +85,7 @@ def Send_message(spy_name,friend_pos):
     out_name=raw_input("enter output image name")
     message=raw_input("enter the message::")
     Steganography.encode(path, out_name, message)
+    print"please wait encodeing the image"
     print "message encription done"
     if spy_name not in spy_history.keys():
         friend_name=spy_list[spy_name]["friend"].keys()
@@ -99,7 +108,8 @@ def read_a_message(spy_name):
         image_name=raw_input("enter name of image you want to decode")
         try:
             secret_text = Steganography.decode(image_name)
-            print "test="+secret_text
+            print"please wait decodeing the image"
+            print "secret message is::"+secret_text
             break
         except Exception as e:
             print "this image does not contain any text"
@@ -147,7 +157,8 @@ while True:
             continue
     else:
         while True:
-            spy_choice=raw_input("1.add status\n2.add a friend\n3.send an encoded message\n4.read message\n5.read previous history\n6.exit\nwating for resonpse::")
+            print"welcome "+spy_list[spy_name]["salutation"]+"."+spy_name #spy_sal from dictonary
+            spy_choice=raw_input("\n1.add status\n2.add a friend\n3.send an encoded message\n4.read message\n5.read previous history\n6.exit\nwating for resonpse::")
             if spy_choice=="1":
                 Add_Status(spy_name)
 
@@ -165,7 +176,7 @@ while True:
 
             elif spy_choice=="6":
                 print("bye! have a nice day")
-                exit()
+                break
             else:
                 print "wrong input try again"
                 continue

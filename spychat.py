@@ -4,14 +4,14 @@ import itertools
 spy_list={}
 spy_history={}
 def Add_Status(spy_name):
-    pre_status_list=["available","busy","sleeping","at work"]
+    pre_status_list=["available","busy","sleeping","at work"] #predefine list of history
     if len(spy_list[spy_name]["status"])==0:
         print"you dont have any previous status"
     else:
         print"you have previous status::"
     while True:
         status_choice=raw_input("press 1 if you want to select the status from predefined list\npress 2 to create your own status\npress 3 to select from previous status history\nwating for response")
-        if status_choice=="1":
+        if status_choice=="1": # status from predefined list
             while True:
                 i=1
                 for status in pre_status_list:
@@ -26,13 +26,13 @@ def Add_Status(spy_name):
                 spy_list[spy_name]["status"].append(new_status)
                 print"status set::"+new_status
                 return
-        elif status_choice=="2":
+        elif status_choice=="2": # creating your new status
             new_status=raw_input("enter your new status")
             spy_list[spy_name]["status"].append(new_status)
             spy_list[spy_name]["present status"] = new_status
             print"status set::" + new_status
             break
-        elif status_choice=="3":
+        elif status_choice=="3":  # selecting previos history
             print"\nyour previous status are::"
             i=1
             if len(spy_list[spy_name]["status"])==0:
@@ -59,7 +59,7 @@ def Add_friend(spy_name):
         friend_rating = raw_input("enter friend's rating::")
         if (friend_age >= 12 and friend_age <= 50) and (len(friend_name) != 0):
             if (float(spy_list[spy_name]["rating"]) <= float(friend_rating)):
-                spy_list[spy_name]["friend"].update({friend_name: {"age": friend_age, "rating": friend_rating}})
+                spy_list[spy_name]["friend"].update({friend_name: {"age": friend_age, "rating": friend_rating}}) #updating spy list, adding new friend
                 print "friend added"
                 break
             else:
@@ -77,7 +77,7 @@ def Select_friend(spy_name):
         friend_list=spy_list[spy_name]["friend"].keys()
         if len(friend_list)==0:
             print"\nyou dont have any friend"
-            return 9999
+            return 9999                  #returnig value 9999 if spy has no friend
         for friend_name in friend_list:
             print str(i)+"."+friend_name
             i=i+1
@@ -96,32 +96,32 @@ def Send_message(spy_name,friend_pos):
     message=raw_input("enter the message::")
     try:
         print"\nplease wait encodeing the image....."
-        Steganography.encode(path, out_name, message)
+        Steganography.encode(path, out_name, message) # function for encoding
         print "\nmessage encription done"
         if spy_name not in spy_history.keys():
             friend_name=friend_pos
-            spy_history.update({spy_name:{friend_name:{"message":[],"time":[],"sender_reciver":False}}})
-            spy_history[spy_name][friend_name]["message"].append(message)
-            spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S'))
+            spy_history.update({spy_name:{friend_name:{"message":[],"time":[],"sender_reciver":False}}})# updating history list of a spy, adding name of the spy to history dictonary
+            spy_history[spy_name][friend_name]["message"].append(message)# adding new message
+            spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S')) #adding time
         else:
             friend_name = friend_pos
             if friend_name not in spy_history[spy_name].keys():
-                spy_history[spy_name].update({friend_name: {"message": [], "time": [],"sender_reciver":False}})
-            spy_history[spy_name][friend_name]["message"].append(message)
-            spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S'))
+                spy_history[spy_name].update({friend_name: {"message": [], "time": [],"sender_reciver":False}})# updating history list of a spy, adding name of the spy to history dictonary
+            spy_history[spy_name][friend_name]["message"].append(message) # adding new message
+            spy_history[spy_name][friend_name]["time"].append(datetime.now().strftime('%H:%M:%S')) #adding time
     except Exception as e:
         print"image not found"
         
 
 def read_a_message(spy_name):
     pos=Select_friend(spy_name)
-    if pos == 9999:
+    if pos == 9999: #if spy does not have any friend
         return
     while True:
         image_name=raw_input("enter name of image you want to decode")
         try:
             print"\nplease wait decodeing the image........"
-            secret_text = Steganography.decode(image_name)
+            secret_text = Steganography.decode(image_name) # functon for decoding message
             spy_history[spy_name][pos]["sender_reciver"]=True
             print "secret message is::"+secret_text
             if secret_text=="SOS":
@@ -135,19 +135,19 @@ def read_a_message(spy_name):
 
 def read_chat(spy_name):
         friend_name= Select_friend(spy_name)
-        if friend_name == 9999:
+        if friend_name == 9999:  #if spy does not have any friend
             return
-        name_list=spy_history[spy_name].keys()
+        name_list=spy_history[spy_name].keys() #printing history of spy
         if friend_name in name_list:
             message_list = spy_history[spy_name][friend_name]["message"]
             time_list=spy_history[spy_name][friend_name]["time"]
             print"list of message send by "+friend_name
-            for message,time in itertools.izip(message_list,time_list):
+            for message,time in itertools.izip(message_list,time_list):  #itertools is use to iterate through two list parallely
                 print"=>message is"+message+" at time "+time
         else:
             print friend_name+" had not sent any message."
 
-while True:
+while True: #starting of the program
     print"\nWelcome Spy"
     user_choice=raw_input("\npress 1 if you want to use default user\npress 2 if you want to create your own custom user\nwating for your response::")
     if user_choice=="1":
@@ -171,7 +171,7 @@ while True:
             spy_authenticate=int(raw_input("\nenter your age::"))
             if spy_authenticate>=12 and spy_authenticate<=50:
                 spy_rating=float(raw_input("enter your rating::"))
-                spy_list.update({spy_name:{"status":[],"present status":"","salutation":spy_salutation,"rating":spy_rating,"age":spy_authenticate,"friend":{}}})
+                spy_list.update({spy_name:{"status":[],"present status":"","salutation":spy_salutation,"rating":spy_rating,"age":spy_authenticate,"friend":{}}})# adding new spy to spy_list
                 print"\nyou are added to spy list"
                 continue
             else:
@@ -195,7 +195,7 @@ while True:
             elif spy_choice=="3":
                 friend_pos=Select_friend(spy_name)
                 if friend_pos==9999:
-                    continue
+                    continue  
                 Send_message(spy_name,friend_pos)
             elif spy_choice=="4":
                 read_a_message(spy_name)
@@ -205,7 +205,7 @@ while True:
 
             elif spy_choice=="6":
                 print("bye! have a nice day")
-                break
+                exit()
             else:
                 print "\nwrong input try again"
                 continue
